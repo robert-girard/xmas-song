@@ -105,9 +105,9 @@ fun onDisconnected(generation: Long) {
 
 Use a direct initial connection after discovery. For a previously known peripheral, Android documents `autoConnect=true` as a passive reconnection mode when the device becomes available; validate the selected Flutter BLE package's exact behavior and API-level support during the physical-device spike. The reconnection owner is the Android service, while the ESP32's complementary responsibility is simply to resume advertising after disconnect.
 
-### Pattern 2: Command ingress is idempotent and non-durable
+### Pattern 2: Serialize commands without replay
 
-**What:** Convert a received byte to a closed `Command` enum, ignore unknown values, and serialize it through one command router to the player/session. Update UI state from player/session events, never by assuming that receipt means playback succeeded.
+**What:** Convert a received byte to a closed `Command` enum, ignore unknown values, and serialize it through one command router to the player/session. Keep one active subscription. Toggle and track-skip commands change state on each execution, so keep repeated legitimate presses distinct and avoid application-level replay. Update UI state from player/session events.
 
 **When to use:** Every BLE notification and every notification/lock-screen media action.
 

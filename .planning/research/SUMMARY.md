@@ -50,7 +50,7 @@ Use Android `mediaPlayback` and justified `connectedDevice` foreground-service t
 
 ### Architecture Approach
 
-Keep `PROTOCOL.md` canonical and mirror/test its UUID and byte constants in both language implementations. Firmware separates button input, protocol constants, and NimBLE advertising/GATT; Android has one `BleSessionManager`/control service, command router, playback engine, and media session; Flutter only renders onboarding/status/song-list state and sends explicit UI actions. Notifications are non-durable and idempotently routed; stale callbacks are rejected by connection generation, subscriptions are reset on disconnect, and only the service owns reconnect timing.
+Keep `PROTOCOL.md` canonical and mirror/test its UUID and byte constants in both language implementations. Firmware separates button input, protocol constants, and NimBLE advertising/GATT; Android has one `BleSessionManager`/control service, command router, playback engine, and media session; Flutter only renders onboarding/status/song-list state and sends explicit UI actions. The router serializes notifications without replay because repeated toggle and track-skip commands change playback state. The service rejects stale callbacks by connection generation, resets subscriptions on disconnect, and owns reconnect timing.
 
 **Major components:**
 
