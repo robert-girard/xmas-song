@@ -34,9 +34,9 @@ No product capabilities have shipped or been validated yet.
 ## Context
 
 - [PRD.md](../PRD.md) records the product vision, original priorities, and initial implementation direction. The decisions in this brief capture the subsequent project discussion.
-- The repository is greenfield. The PRD records an Ubuntu 22.04 development environment with ESP-IDF v6.1.1 and Flutter stable, plus an available physical Android device. Phase 1 will confirm the actual board, phone, and supported build configuration.
+- The repository is greenfield. The PRD records an Ubuntu 22.04 development environment with ESP-IDF v6.1.1 and Flutter stable, plus an available physical Android device. A local serial probe identified the connected chip as an ESP32-D0WDQ6 revision 1.0, so the ESP-IDF target is `esp32`. Phase 1 will confirm the development-board pinout, button GPIO, target phone, and supported build configuration.
 - The default gestures are short press for play/pause, double press for next, and long press for stop. Phase 1 will define distinct gestures for previous and shuffle and check that gesture timing supports the response target.
-- Battery-friendly idle is a design goal. Confirm the demo power source and feasible low-power behavior once the board is identified. LED feedback, CI, and OEM-specific battery-optimization guidance still need a scope decision.
+- Battery-friendly idle is a design goal. Confirm the demo power source and measure feasible low-power behavior on the development board. LED feedback, CI, and OEM-specific battery-optimization guidance still need a scope decision.
 - Verify BLE, playback, and recovery on a physical phone. Include screen-off control, extended idle, and recovery from a dropped link in the demo checks.
 
 ## Constraints
