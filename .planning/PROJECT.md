@@ -35,8 +35,8 @@ No product capabilities have shipped or been validated yet.
 
 - [PRD.md](../PRD.md) records the product vision, original priorities, and initial implementation direction. The decisions in this brief capture the subsequent project discussion.
 - The repository is greenfield. The PRD records an Ubuntu 22.04 development environment with ESP-IDF v6.1.1 and Flutter stable, plus an available physical Android device. A local serial probe identified the connected chip as an ESP32-D0WDQ6 revision 1.0, so the ESP-IDF target is `esp32`. Phase 1 will confirm the development-board pinout, button GPIO, target phone, and supported build configuration.
-- The default gestures are short press for play/pause, double press for next, and long press for stop. Phase 1 will define distinct gestures for previous and shuffle and check that gesture timing supports the response target.
-- Battery-friendly idle is a design goal. Confirm the demo power source and measure feasible low-power behavior on the development board. LED feedback, CI, and OEM-specific battery-optimization guidance still need a scope decision.
+- The default gestures are short press for play/pause, double press for next, and long press for stop. The all-commands slice will define distinct gestures for previous and shuffle and check that gesture timing supports the response target.
+- The v1 demo uses USB power. Battery optimization, LED feedback, CI, and OEM-specific battery guidance are deferred. Screen-off and reconnect tests on the target phone remain part of v1.
 - Verify BLE, playback, and recovery on a physical phone. Include screen-off control, extended idle, and recovery from a dropped link in the demo checks.
 
 ## Constraints
@@ -57,6 +57,7 @@ No product capabilities have shipped or been validated yet.
 | One physical button in v1 | The hardware keeps the intended single-button interaction. | Confirmed in project discussion |
 | Second press acceptable after automatic reconnection | The user can resume control without reopening the app. | Confirmed in project discussion |
 | Small bundled offline playlist | Playback works immediately after setup and has no runtime network dependency. | Confirmed in project discussion |
+| USB-powered vertical MVP | Get a physical press playing music early and add the remaining controls and recovery in subsequent phases. | Approved for v1 |
 
 ## Evolution
 
