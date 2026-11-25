@@ -55,12 +55,27 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
+| HW-01 | Phase 2 | Pending |
+| BLE-01 | Phase 1 | Pending |
+| BLE-02 | Phase 2 | Pending |
+| BLE-03 | Phase 1 | Pending |
+| BLE-04 | Phase 1 | Pending |
+| BLE-05 | Phase 2 | Pending |
+| REC-01 | Phase 4 | Pending |
+| REC-02 | Phase 4 | Pending |
+| AUD-01 | Phase 1 | Pending |
+| AUD-02 | Phase 2 | Pending |
+| BG-01 | Phase 1 | Pending |
+| BG-02 | Phase 3 | Pending |
+| UI-01 | Phase 3 | Pending |
+| DOC-01 | Phase 1 | Pending |
+| DOC-02 | Phase 4 | Pending |
 
 **Coverage**
 
 - v1 requirements: 15 total
-- Mapped to phases: 0
-- Unmapped: 15
+- Mapped to phases: 15
+- Unmapped: 0
 
 ---
-*Requirements approved 2026-11-25.*
+*Requirements approved 2026-11-25. Traceability added during roadmap creation.*
