@@ -171,3 +171,7 @@ Do not make direct repo edits outside a GSD workflow unless the user explicitly 
 > Profile not yet configured. Run `$gsd-profile-user` to generate your developer profile.
 > This section is managed by `generate-claude-profile` -- do not edit manually.
 <!-- GSD:profile-end -->
+
+## Subagent Defaults
+
+Use `gpt-6.2-sol` with `high` reasoning effort for subagents by default. Use a different model when the user explicitly requests one.
