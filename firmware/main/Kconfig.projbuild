@@ -1,0 +1,15 @@
+menu "Xmas Button"
+
+config XMAS_BUTTON_GPIO_VERIFIED
+    bool "Enable BOOT button after verifying board wiring"
+    default n
+    help
+        Leave disabled until the actual board's BOOT-to-GPIO0 connection is verified.
+
+config XMAS_BUTTON_GPIO
+    int "Verified button GPIO"
+    depends on XMAS_BUTTON_GPIO_VERIFIED
+    default 0
+    range 0 39
+
+endmenu
