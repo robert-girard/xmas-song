@@ -1,0 +1,18 @@
+# ESP-IDF generated build and configuration state
+/firmware/build/
+/firmware/sdkconfig
+/firmware/sdkconfig.old
+/firmware/managed_components/
+
+# Flutter and Dart tool output
+/app/.dart_tool/
+/app/.flutter-plugins
+/app/.flutter-plugins-dependencies
+/app/build/
+/app/coverage/
+
+# Android local SDK configuration and generated Gradle state
+/app/android/local.properties
+/app/android/.gradle/
+/app/android/app/build/
+/app/android/app/.cxx/
