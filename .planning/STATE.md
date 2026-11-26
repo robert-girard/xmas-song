@@ -3,16 +3,16 @@ gsd_state_version: "1.0"
 current_phase: 01
 current_phase_name: One-Press Locked Playback Spike
 status: executing
-stopped_at: Completed 01-02-PLAN.md
-last_updated: "2026-11-26T20:31:30.660Z"
+stopped_at: Completed 01-03-PLAN.md
+last_updated: "2026-11-26T20:37:31.561Z"
 last_activity: 2026-11-26
 last_activity_desc: Phase 01 execution started
-state_head: 3b67ebbceecb347290a34341d6b2a93580c6a02f
+state_head: 7d0aa750f686d5af106a9215ab6194ff5d388fac
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 4
-  completed_plans: 2
+  completed_plans: 3
   percent: 0
 ---
 
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-11-25)
 ## Current Position
 
 Phase: 01 (One-Press Locked Playback Spike) — EXECUTING
-Plan: 3 of 4
+Plan: 4 of 4
 Status: Ready to execute
 Last activity: 2026-11-26 — Phase 01 execution started
 
@@ -58,6 +58,7 @@ Progress: [░░░░░░░░░░] 0%
 |------|----------|-------|-------|
 | Phase 01 P01 | 293m | 2 tasks | 37 files |
 | Phase 01 P02 | 25m | 2 tasks | 3 files |
+| Phase 01 P03 | 7min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -75,6 +76,10 @@ Recent decisions affecting current work:
 - [Phase 01]: Use permission_handler status checks after Settings return so the app does not issue a second prompt.
 - [Phase 01]: Keep Android session state authoritative; Flutter displays native snapshots and stateChanged updates.
 - [Phase 01]: Preserve the Settings action until grant is confirmed when Android reports an ambiguous legacy denial.
+- [Phase 01]: Use the user-selected exact Wikimedia Commons Jingle Bells file as track 01, without trimming or transcoding.
+- [Phase 01]: Use Ihaksi’s compact Freesound CC0 Ogg preview for track 02 and retain courtesy attribution.
+- [Phase 01]: Capture track index and auto-start intent per preparation callback instead of storing mutable playlist-transition state.
+- [Phase 01]: Keep generated Android/Flutter and ESP-IDF output ignored while leaving both dependency lockfiles trackable.
 
 ### Pending Todos
 
@@ -98,6 +103,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-11-26T20:31:30.627Z
-Stopped at: Completed 01-02-PLAN.md
+Last session: 2026-11-26T20:37:31.528Z
+Stopped at: Completed 01-03-PLAN.md
 Resume file: None
