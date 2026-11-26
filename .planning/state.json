@@ -6,7 +6,7 @@
     {
       "number": "1",
       "name": "One-Press Locked Playback Spike",
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "number": "2",
@@ -29,5 +29,5 @@
     "label": "Advance to the next step",
     "reason": "Phase 1 of 4 · 0% · executing"
   },
-  "updated_at": "2026-11-26T14:13:23.835Z"
+  "updated_at": "2026-11-26T20:04:01.320Z"
 }
