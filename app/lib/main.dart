@@ -382,10 +382,12 @@ class _SetupPageState extends State<SetupPage> with WidgetsBindingObserver {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Icon(
-                    Icons.music_note,
-                    size: 64,
-                    color: Color(0xffa51d32),
+                  Image.asset(
+                    'assets/xmas-present.png',
+                    width: 64,
+                    height: 64,
+                    fit: BoxFit.contain,
+                    semanticLabel: 'Christmas present',
                   ),
                   const SizedBox(height: 20),
                   const Text(
