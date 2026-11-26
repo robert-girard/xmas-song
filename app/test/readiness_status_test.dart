@@ -137,6 +137,11 @@ void main() {
       expect(find.text('Error'), findsOneWidget);
       expect(find.text('Ready'), findsNothing);
       expect(find.text('Button disconnected'), findsOneWidget);
+
+      await tester.tap(find.text('Retry setup'));
+      await tester.pumpAndSettle();
+      expect(startCount, 1);
+      expect(find.text('Starting'), findsOneWidget);
     });
 
     testWidgets(
