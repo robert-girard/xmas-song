@@ -172,6 +172,6 @@ Do not make direct repo edits outside a GSD workflow unless the user explicitly 
 > This section is managed by `generate-claude-profile` -- do not edit manually.
 <!-- GSD:profile-end -->
 
-## Subagent Defaults
+## Subagent usage
 
-Use `gpt-6.2-sol` with `high` reasoning effort for subagents by default. Use a different model when the user explicitly requests one.
+Use `gpt-6-luna` with `high` reasoning effort for subagents by default. For Code reviews use `gpt-6.2-sol` with `high` reasoning effort. Use a different model when the user explicitly requests one.
