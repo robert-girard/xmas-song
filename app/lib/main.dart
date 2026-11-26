@@ -35,6 +35,7 @@ class _SetupPageState extends State<SetupPage> with WidgetsBindingObserver {
   bool _busy = false;
   bool _settingsRequired = false;
   bool _settingsVisitPending = false;
+  bool _preserveRecoveryUntilNativeProgress = false;
   int _nativeRevision = 0;
   int _snapshotRequest = 0;
 
@@ -60,6 +61,11 @@ class _SetupPageState extends State<SetupPage> with WidgetsBindingObserver {
     if (!mounted || state['status'] is! String || state['detail'] is! String) {
       return;
     }
+    if (_preserveRecoveryUntilNativeProgress &&
+        !_isNativeProgressStatus(state['status'] as String)) {
+      return;
+    }
+    _preserveRecoveryUntilNativeProgress = false;
     _nativeRevision++;
     setState(() {
       _state = state;
@@ -105,9 +111,10 @@ class _SetupPageState extends State<SetupPage> with WidgetsBindingObserver {
   }
 
   Future<void> _setup() async {
-    if (!mounted || _busy) {
+    if (!mounted || _busy || _settingsVisitPending || _settingsRequired) {
       return;
     }
+    _preserveRecoveryUntilNativeProgress = false;
     setState(() {
       _busy = true;
       _settingsRequired = false;
@@ -202,10 +209,11 @@ class _SetupPageState extends State<SetupPage> with WidgetsBindingObserver {
     final permissionName = apiLevel <= 30
         ? 'Location access'
         : 'Nearby Devices access';
-    final detail = access.permanentlyDenied
+    final detail = access.permanentlyDenied || retainSettingsOption
         ? 'Allow $permissionName in Android settings so the app can find the button.'
         : 'Allow $permissionName for button setup, then try again.';
     _nativeRevision++;
+    _preserveRecoveryUntilNativeProgress = true;
     setState(() {
       _state = {'status': status, 'detail': detail};
       _settingsRequired = access.permanentlyDenied || retainSettingsOption;
@@ -293,6 +301,7 @@ class _SetupPageState extends State<SetupPage> with WidgetsBindingObserver {
     bool settingsRequired = false,
   }) {
     _nativeRevision++;
+    _preserveRecoveryUntilNativeProgress = true;
     setState(() {
       _state = {'status': status, 'detail': detail};
       _settingsRequired = settingsRequired;
@@ -304,14 +313,15 @@ class _SetupPageState extends State<SetupPage> with WidgetsBindingObserver {
       return;
     }
     final locationSettings = _state['status'] == 'Location services off';
-    _settingsVisitPending = true;
+    setState(() => _settingsVisitPending = true);
     try {
       if (locationSettings) {
         await _channel.invokeMethod<void>('openLocationSettings');
       } else {
         final opened = await openAppSettings();
+        if (!mounted) return;
         if (!opened) {
-          _settingsVisitPending = false;
+          setState(() => _settingsVisitPending = false);
           _showFailure(
             'Permission needed',
             'Android could not open app settings. You can retry the permission prompt.',
@@ -319,7 +329,7 @@ class _SetupPageState extends State<SetupPage> with WidgetsBindingObserver {
         }
       }
     } catch (error) {
-      _settingsVisitPending = false;
+      if (mounted) setState(() => _settingsVisitPending = false);
       if (mounted) {
         _showFailure('Permission needed', 'Could not open settings: $error');
       }
@@ -336,11 +346,23 @@ class _SetupPageState extends State<SetupPage> with WidgetsBindingObserver {
     'Ready',
   }.contains(_state['status']);
 
+  bool _isNativeProgressStatus(String status) => const {
+    'Starting',
+    'Scanning',
+    'Connecting',
+    'Discovering',
+    'Subscribing',
+    'Preparing',
+    'Ready',
+  }.contains(status);
+
   @override
   Widget build(BuildContext context) {
     final status = '${_state['status'] ?? 'Inactive'}';
     final detail = '${_state['detail'] ?? ''}';
-    final buttonLabel = _busy || _nativeSessionActive
+    final buttonLabel = _settingsRequired && status == 'Permission needed'
+        ? 'Permission required'
+        : _busy || _settingsVisitPending || _nativeSessionActive
         ? (status == 'Ready' ? 'Button ready' : 'Setting up…')
         : status == 'Permission needed' && !_settingsRequired
         ? 'Retry'
@@ -394,7 +416,13 @@ class _SetupPageState extends State<SetupPage> with WidgetsBindingObserver {
                   ),
                   const SizedBox(height: 16),
                   FilledButton.icon(
-                    onPressed: _busy || _nativeSessionActive ? null : _setup,
+                    onPressed:
+                        _busy ||
+                            _settingsVisitPending ||
+                            _settingsRequired ||
+                            _nativeSessionActive
+                        ? null
+                        : _setup,
                     icon: _busy
                         ? const SizedBox.square(
                             dimension: 18,
@@ -405,7 +433,9 @@ class _SetupPageState extends State<SetupPage> with WidgetsBindingObserver {
                   ),
                   if (_settingsRequired)
                     TextButton(
-                      onPressed: _busy ? null : _openSettings,
+                      onPressed: _busy || _settingsVisitPending
+                          ? null
+                          : _openSettings,
                       child: const Text('Open settings'),
                     ),
                 ],
