@@ -28,12 +28,12 @@ Xmas Button is delivered as four vertical slices. The first slice proves the cor
   3. The app can play every track in a small rights-documented bundled playlist with the phone offline and without an account or external music setup.
   4. On the physical target phone, a short press while already connected starts audible music in about one second with the phone locked and screen off. Playback continues with the screen off. The result confirms or revises the proposed service ownership before Phase 2.
   5. `PROTOCOL.md` defines the service and characteristic UUIDs and all five command bytes. Both projects use matching protocol constants, starting with the short-press path in this phase.
-**Plans**: 1/4 plans executed
+**Plans**: 2/4 plans executed
 **Wave 1**
 - [x] 01-01-PLAN.md
 
 **Wave 2**
-- [ ] 01-02-PLAN.md
+- [x] 01-02-PLAN.md
 - [ ] 01-03-PLAN.md
 
 **Wave 3** *(blocked on Wave 2 completion)*
@@ -81,7 +81,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. One-Press Locked Playback Spike | 1/4 | In Progress | - |
+| 1. One-Press Locked Playback Spike | 2/4 | In Progress | - |
 | 2. Complete Five-Command Control | 0/TBD | Not started | - |
 | 3. Visible Media Experience | 0/TBD | Not started | - |
 | 4. Recovery and Repeatable Demo | 0/TBD | Not started | - |

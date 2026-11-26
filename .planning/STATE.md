@@ -3,16 +3,16 @@ gsd_state_version: "1.0"
 current_phase: 01
 current_phase_name: One-Press Locked Playback Spike
 status: executing
-stopped_at: Completed 01-01-PLAN.md; functional physical smoke passed; final-asset latency remains open
-last_updated: "2026-11-26T20:04:02.116Z"
+stopped_at: Completed 01-02-PLAN.md
+last_updated: "2026-11-26T20:31:30.660Z"
 last_activity: 2026-11-26
 last_activity_desc: Phase 01 execution started
-state_head: d3057bb6d47e35daa069699dc200ab3c4d27005b
+state_head: 3b67ebbceecb347290a34341d6b2a93580c6a02f
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 4
-  completed_plans: 1
+  completed_plans: 2
   percent: 0
 ---
 
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-11-25)
 ## Current Position
 
 Phase: 01 (One-Press Locked Playback Spike) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 Status: Ready to execute
 Last activity: 2026-11-26 — Phase 01 execution started
 
@@ -57,6 +57,7 @@ Progress: [░░░░░░░░░░] 0%
 | Plan | Duration | Tasks | Files |
 |------|----------|-------|-------|
 | Phase 01 P01 | 293m | 2 tasks | 37 files |
+| Phase 01 P02 | 25m | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -71,6 +72,9 @@ Recent decisions affecting current work:
 - [Phase 01]: Verified GPIO0 is the BOOT input on the inspected KeeYees ESP32-D0WDQ6; retain the Kconfig guard for other boards.
 - [Phase 01]: The functional locked-phone smoke passed, while first-audible latency remains for final-asset measurement in Plan 01-04.
 - [Phase 01]: Carry the user-selected replacement recording and current asset silent-lead-in evidence into Plan 01-03; do not trim the current file.
+- [Phase 01]: Use permission_handler status checks after Settings return so the app does not issue a second prompt.
+- [Phase 01]: Keep Android session state authoritative; Flutter displays native snapshots and stateChanged updates.
+- [Phase 01]: Preserve the Settings action until grant is confirmed when Android reports an ambiguous legacy denial.
 
 ### Pending Todos
 
@@ -94,6 +98,6 @@ Items acknowledged and deferred at milestone close, most recent first:
 
 ## Session Continuity
 
-Last session: 2026-11-26T20:04:02.080Z
-Stopped at: Completed 01-01-PLAN.md; functional physical smoke passed; final-asset latency remains open
-Resume file: 01-02-PLAN.md
+Last session: 2026-11-26T20:31:30.627Z
+Stopped at: Completed 01-02-PLAN.md
+Resume file: None
