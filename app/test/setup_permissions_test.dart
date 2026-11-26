@@ -24,6 +24,7 @@ void main() {
     late int openSettingsCount;
     late List<int> requestedPermissions;
     Completer<Map<int, int>>? pendingRequest;
+    Completer<Map<String, dynamic>?>? pendingSnapshot;
 
     setUp(() {
       apiLevel = 28;
@@ -34,6 +35,7 @@ void main() {
       openSettingsCount = 0;
       requestedPermissions = [];
       pendingRequest = null;
+      pendingSnapshot = null;
 
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         ..setMockMethodCallHandler(_permissions, (call) async {
@@ -60,6 +62,7 @@ void main() {
             case 'environment':
               return {'apiLevel': apiLevel, 'locationServicesEnabled': true};
             case 'snapshot':
+              if (pendingSnapshot != null) return pendingSnapshot!.future;
               return {
                 'status': 'Inactive',
                 'detail': 'Tap Set up button to begin',
@@ -160,23 +163,38 @@ void main() {
         expect(requestCount, 1);
         expect(startCount, 1);
         expect(find.text('Scanning'), findsOneWidget);
+        expect(find.text('Open settings'), findsNothing);
       },
     );
 
     testWidgets(
-      'stays non-ready when settings are opened but access remains denied',
+      'keeps settings recovery after a denied, late inactive resume snapshot',
       (tester) async {
         permissionResult = _permanentlyDenied;
-        checkResult = _permanentlyDenied;
+        // Android may report ordinary denial when its Activity is unavailable
+        // for the status check after returning from settings.
+        checkResult = _denied;
         await tester.pumpWidget(const XmasButtonApp());
+        await tester.pumpAndSettle();
         await tester.tap(find.text('Set up button'));
         await tester.pumpAndSettle();
         await tester.tap(find.text('Open settings'));
         await tester.pumpAndSettle();
 
+        final staleSnapshot = Completer<Map<String, dynamic>?>();
+        pendingSnapshot = staleSnapshot;
         tester.binding.handleAppLifecycleStateChanged(
           AppLifecycleState.resumed,
         );
+        await tester.pump();
+        expect(find.text('Permission needed'), findsOneWidget);
+        expect(find.text('Open settings'), findsOneWidget);
+        expect(startCount, 0);
+
+        staleSnapshot.complete({
+          'status': 'Inactive',
+          'detail': 'Readiness service stopped',
+        });
         await tester.pumpAndSettle();
 
         expect(find.text('Permission needed'), findsOneWidget);

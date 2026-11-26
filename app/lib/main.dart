@@ -61,7 +61,10 @@ class _SetupPageState extends State<SetupPage> with WidgetsBindingObserver {
       return;
     }
     _nativeRevision++;
-    setState(() => _state = state);
+    setState(() {
+      _state = state;
+      if (state['status'] == 'Ready') _settingsRequired = false;
+    });
   }
 
   Future<void> _refreshSnapshot() async {
@@ -190,7 +193,11 @@ class _SetupPageState extends State<SetupPage> with WidgetsBindingObserver {
     );
   }
 
-  void _showPermissionState(_PermissionAccess access, int apiLevel) {
+  void _showPermissionState(
+    _PermissionAccess access,
+    int apiLevel, {
+    bool retainSettingsOption = false,
+  }) {
     const status = 'Permission needed';
     final permissionName = apiLevel <= 30
         ? 'Location access'
@@ -198,9 +205,10 @@ class _SetupPageState extends State<SetupPage> with WidgetsBindingObserver {
     final detail = access.permanentlyDenied
         ? 'Allow $permissionName in Android settings so the app can find the button.'
         : 'Allow $permissionName for button setup, then try again.';
+    _nativeRevision++;
     setState(() {
       _state = {'status': status, 'detail': detail};
-      _settingsRequired = access.permanentlyDenied;
+      _settingsRequired = access.permanentlyDenied || retainSettingsOption;
     });
   }
 
@@ -241,9 +249,14 @@ class _SetupPageState extends State<SetupPage> with WidgetsBindingObserver {
       final access = await _checkPermissions(apiLevel);
       if (!mounted) return;
       if (!access.granted) {
-        _showPermissionState(access, apiLevel);
+        _showPermissionState(
+          access,
+          apiLevel,
+          retainSettingsOption: _settingsRequired,
+        );
         return;
       }
+      setState(() => _settingsRequired = false);
       await _continueSetup(environment);
     } on PlatformException catch (error) {
       if (mounted) _showStartError(error);
@@ -279,6 +292,7 @@ class _SetupPageState extends State<SetupPage> with WidgetsBindingObserver {
     String detail, {
     bool settingsRequired = false,
   }) {
+    _nativeRevision++;
     setState(() {
       _state = {'status': status, 'detail': detail};
       _settingsRequired = settingsRequired;
