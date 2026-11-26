@@ -39,6 +39,7 @@ class ReadinessService : Service() {
     private var scanner: android.bluetooth.le.BluetoothLeScanner? = null
     private var gatt: BluetoothGatt? = null
     private var player: MediaPlayer? = null
+    private val trackResourceIds = intArrayOf(R.raw.track_01, R.raw.track_02)
     private var session = 0
     private var started = false
     private var prepared = false
@@ -231,29 +232,57 @@ class ReadinessService : Service() {
         } catch (e: Exception) { fail("Could not apply playback command: ${e.message}") }
     }
 
-    private fun prepareAudio(token: Int) {
-        state("Preparing", "Preparing offline track")
+    private fun prepareAudio(token: Int, trackIndex: Int = 0, startOnPrepared: Boolean = false) {
+        state("Preparing", "Preparing offline track ${trackIndex + 1}")
         try {
             val p = MediaPlayer()
             player = p
             p.setAudioAttributes(AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA).setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build())
             p.setWakeMode(this, PowerManager.PARTIAL_WAKE_LOCK)
-            p.setOnErrorListener { _, what, extra -> if (token == session) fail("Audio preparation failed ($what/$extra)"); true }
+            p.setOnErrorListener { failedPlayer, what, extra ->
+                if (token == session && failedPlayer === player) fail("Audio preparation failed ($what/$extra)")
+                true
+            }
             p.setOnCompletionListener {
                 if (token == session && p === player) {
+                    try {
+                        p.release()
+                    } catch (e: Exception) {
+                        fail("Could not release completed audio: ${e.message}")
+                        return@setOnCompletionListener
+                    }
+                    player = null
+                    prepared = false
                     playbackActive = false
-                    updateNotification("Ready")
+
+                    val hasNextTrack = trackIndex + 1 < trackResourceIds.size
+                    val nextTrackIndex = if (hasNextTrack) trackIndex + 1 else 0
+                    prepareAudio(token, nextTrackIndex, startOnPrepared = hasNextTrack)
                 }
             }
             p.setOnPreparedListener {
                 if (token != session || p !== player) { p.release(); return@setOnPreparedListener }
                 clearTimeout()
                 prepared = true
-                Log.i(TAG, "Audio prepared silently")
-                updateNotification("Ready")
-                state("Ready", "Button connected · track ready offline")
+                if (startOnPrepared) {
+                    try {
+                        p.start()
+                        playbackActive = true
+                        promoteMediaPlayback()
+                        Log.i(TAG, "Started playlist track ${trackIndex + 1}")
+                    } catch (e: Exception) {
+                        fail("Could not start next bundled track: ${e.message}")
+                        return@setOnPreparedListener
+                    }
+                } else {
+                    Log.i(TAG, "Audio prepared silently")
+                }
+                updateNotification(if (playbackActive) "Ready · Playing" else "Ready")
+                state("Ready", "Button connected · track ${trackIndex + 1} ready offline")
             }
-            resources.openRawResourceFd(R.raw.track_01).use { fd -> p.setDataSource(fd.fileDescriptor, fd.startOffset, fd.length) }
+            resources.openRawResourceFd(trackResourceIds[trackIndex]).use { fd ->
+                p.setDataSource(fd.fileDescriptor, fd.startOffset, fd.length)
+            }
             p.prepareAsync()
             armTimeout(token, 15000, "Audio preparation timed out")
         } catch (e: Exception) { fail("Could not prepare bundled audio: ${e.message}") }
